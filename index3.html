@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> aşık birisi yaptı </title>
+</head>
+
+<div id="loadingScreen">
+  <div class="loaderHeart">❤️</div>
+  <div class="loadingText">Sürpriz hazırlanıyor sevgilim...</div>
+</div>
+
+<style>
+  #loadingScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #fceabb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Baloo 2', cursive;
+}
+
+.loaderHeart {
+  font-size: 5rem;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+
+.loadingText {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: #d6336c;
+  font-weight: bold;
+}
+
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin:0; padding:0;
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    font-family: 'Baloo 2', cursive, sans-serif;
+    height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    user-select: none;
+    overflow: hidden;
+  }
+  #message {
+    font-size: 1.9rem;
+    margin-bottom: 20px;
+    color: #d6336c;
+    font-weight: 700;
+    text-align: center;
+    min-height: 80px;
+    transition: opacity 0.3s ease;
+  }
+  #heart {
+    font-size: 90px;
+    color: #d6336c;
+    margin-bottom: 25px;
+    user-select: none;
+    transition: transform 0.5s ease, color 1s ease;
+    animation: heartPulse 2s infinite;
+  }
+  @keyframes heartPulse {
+    0%, 100% { transform: scale(1); color: #d6336c; }
+    50% { transform: scale(1.3); color: #ff356d; }
+  }
+  .btn-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  button {
+    padding: 16px 36px;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 6px 15px rgba(214, 51, 108, 0.7);
+    user-select: none;
+    position: relative;
+    background: #d6336c;
+    color: white;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #b02a56;
+    transform: scale(1.05);
+  }
+  #btnLeave {
+    background: #555;
+  }
+  #btnLeave:hover:not(:disabled) {
+    background: #333;
+  }
+  #finalHeart {
+    font-size: 90px;
+    color: #d6336c;
+    opacity: 0;
+    user-select: none;
+    position: relative;
+    z-index: 10;
+    transition: opacity 0.7s ease;
+    animation: heartPulse 2s infinite;
+  }
+  #road {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 120px;
+    background: #8B5E3C;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .animal {
+    position: absolute;
+    bottom: 10px;
+    width: 100px;
+    user-select: none;
+    animation-timing-function: linear;
+  }
+  #cow {
+    left: -120px;
+    animation: walkAnimal 12s linear forwards;
+    animation-play-state: paused;
+  }
+  #dog {
+    left: -220px;
+    animation: walkAnimal 14s linear forwards;
+    animation-play-state: paused;
+  }
+  @keyframes walkAnimal {
+    0% { left: -120px; }
+    100% { left: 110%; }
+  }
+  /* Mini oyun alanları */
+  /* #catFeedingGameArea stilleri kaldırıldı */
+  #numberGameArea, #memoryGameArea, #secretArea { /* #catFeedingGameArea kaldırıldı */
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+  #numberOptions button {
+    margin: 0 8px;
+    background: #6f42c1;
+  }
+  #numberOptions button:hover {
+    background: #5a32a3;
+  }
+
+  /* Cat Feeding Game Styles kaldırıldı */
+
+  /* Memory Game Styles */
+  #memoryGameArea {
+    margin-top: 20px;
+  }
+  #memoryGameGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px); /* Adjust based on number of cards */
+    grid-gap: 10px;
+    perspective: 1000px;
+  }
+  .memory-card {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .memory-card.flip {
+    transform: rotateY(180deg);
+  }
+  .front-face, .back-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border-radius: 8px;
+  }
+  .front-face {
+    background-color: #ffde59; /* Card back color */
+  }
+  .back-face {
+    background-color: #ffffff; /* Card front color */
+    transform: rotateY(180deg);
+  }
+
+
+  #secretBtn {
+    margin-top: 20px;
+    background: #28a745;
+    font-size: 1.2rem;
+  }
+  #secretBtn:hover {
+    background: #1e7e34;
+  }
+  /* Confetti */
+  #confettiCanvas {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 20;
+  }
+  /* Uyarı mesajı */
+  #warning {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff356d;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 30;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="message">Başla bakalım, sevgilim :)</div>
+<div id="heart">❤️</div>
+
+<div class="btn-container" id="mainButtons">
+  <button id="btnLove"> Teşekkür ederim aşkimmm,</button>
+  <button id="btnLeave"> EYW hocam (iyi da) </button>
+</div>
+
+
+<div id="numberGameArea">
+  <div>1 ile 10 arasında bir sayı tut, ben tahmin edeceğim. Seç bakalım</div>
+  <div id="numberOptions">
+    <button data-number="1">1</button>
+    <button data-number="2">2</button>
+    <button data-number="3">3</button>
+    <button data-number="4">4</button>
+    <button data-number="5">5</button>
+    <button data-number="6">6</button>
+    <button data-number="7">7</button>
+    <button data-number="8">8</button>
+    <button data-number="9">9</button>
+    <button data-number="0">0</button>
+  </div>
+  <div id="numberResult" style="margin-top:15px; font-weight:bold; color:#d6336c;"></div>
+</div>
+
+<div id="memoryGameArea">
+  <div>Hafıza Oyunu: Eşleşenleri bul!</div>
+  <div id="memoryGameGrid"></div>
+  <div id="memoryGameMessage" style="margin-top:15px; font-weight:bold; color:#d6336c;"></div>
+</div>
+
+<div id="secretArea">
+  <div>🎉 Sürpriz 🎉 Gizli bölüme hoş geldin 🎉</div>
+  <button id="secretBtn">Sürpriz Mesajı Göster</button>
+  <div id="secretMessage" style="margin-top:20px; font-weight:700; color:#28a745;"></div>
+</div>
+
+<div id="finalHeart">Ayhan ❤️ Songül</div>
+
+<div id="road">
+  <img id="cow" class="animal" src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="İnek" />
+  <img id="dog" class="animal" src="https://cdn-icons-png.flaticon.com/512/194/194191.png" alt="Köpek" />
+</div>
+
+<div id="warning"> diğer şıkka mı tıklamaya çalıştın :D 🐱‍👤</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<script>
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingScreen').style.display = 'none';
+  }, 3500);
+});
+
+
+  // Elementler
+  const messageEl = document.getElementById('message');
+  const heartEl = document.getElementById('heart');
+  const btnLove = document.getElementById('btnLove');
+  const btnLeave = document.getElementById('btnLeave');
+  const mainButtons = document.getElementById('mainButtons');
+  const finalHeart = document.getElementById('finalHeart');
+  const warning = document.getElementById('warning');
+
+  const numberGameArea = document.getElementById('numberGameArea');
+  const numberOptions = document.getElementById('numberOptions');
+  const numberResult = document.getElementById('numberResult');
+
+  // Kedi besleme oyunu ile ilgili değişkenler kaldırıldı
+  // const catFeedingGameArea = document.getElementById('catFeedingGameArea');
+  // const catEl = document.getElementById('cat');
+  // const foodEl = document.getElementById('food');
+  // const catMessageEl = document.getElementById('catMessage');
+
+  const memoryGameArea = document.getElementById('memoryGameArea');
+  const memoryGameGrid = document.getElementById('memoryGameGrid');
+  const memoryGameMessage = document.getElementById('memoryGameMessage');
+
+
+  const secretArea = document.getElementById('secretArea');
+  const secretBtn = document.getElementById('secretBtn');
+  const secretMessage = document.getElementById('secretMessage');
+
+  const cow = document.getElementById('cow');
+  const dog = document.getElementById('dog');
+
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const ctx = confettiCanvas.getContext('2d');
+
+  // Oyun ve mesaj ayarları
+  const loveMessages = [
+    "İyi ki varsın!",
+    "Seni çok seviyorum!",
+    "Seni çok ama çok seviyorum!",
+    "Ayrıca okulu bırakmak yok 😼",
+  ];
+  let messageIndex = 0;
+  let gamePhase = 'main';
+  let numberGameStep = 0;
+  let totalScore = 0;
+
+
+  function animateHeart() {
+    heartEl.style.transform = 'scale(1.8)';
+    setTimeout(() => {
+      heartEl.style.transform = 'scale(1)';
+    }, 500);
+  }
+
+
+  let leaveBtnTimeout;
+  function moveLeaveButton() {
+    const btn = btnLeave;
+    const x = Math.random() * (window.innerWidth - btn.offsetWidth - 40);
+    const y = Math.random() * (window.innerHeight - btn.offsetHeight - 40);
+    btn.style.position = 'fixed';
+    btn.style.left = `${x}px`;
+    btn.style.top = `${y}px`;
+  }
+  moveLeaveButton();
+
+  function showWarning() {
+    warning.style.opacity = 1;
+    setTimeout(() => {
+      warning.style.opacity = 0;
+    }, 1200);
+  }
+
+  btnLeave.addEventListener('mousemove', () => {
+    if (Math.random() < 0.4) {
+      moveLeaveButton();
+      showWarning();
+
+    } else {
+      // If you want to keep a "rocketFly" effect for the leave button, re-implement it.
+      // For now, it just moves.
+      moveLeaveButton();
+    }
+  });
+  btnLeave.addEventListener('click', () => {
+    // If you want to keep a "rocketFly" effect for the leave button, re-implement it.
+    // For now, it just moves.
+    moveLeaveButton();
+  });
+
+  // "Seni Seviyorum" butonu işlevi
+  btnLove.addEventListener('click', () => {
+    if (gamePhase === 'main') {
+      if (messageIndex < loveMessages.length) {
+        messageEl.style.opacity = 0;
+        setTimeout(() => {
+          messageEl.textContent = loveMessages[messageIndex];
+          messageEl.style.opacity = 1;
+          animateHeart();
+          messageIndex++;
+          totalScore += 10;
+        }, 300);
+      } else {
+        // Mesajlar bitti, sayı tahmin oyununa geç
+        gamePhase = 'numberGame';
+        mainButtons.style.display = 'none';
+        heartEl.style.opacity = 0;
+        messageEl.textContent = "1 ile 5 arasında bir sayı tut, ben tahmin edeceğim. Hadi sen seç";
+        numberGameArea.style.display = 'flex';
+        numberResult.textContent = '';
+        numberGameStep = 0;
+      }
+    }
+  });
+
+  // Sayı tahmin oyunu
+  numberOptions.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && gamePhase === 'numberGame') {
+      const chosen = Number(e.target.dataset.number);
+      // Ensure the random guess is between 1 and 5 (inclusive) based on message text
+      const guess = Math.floor(Math.random() * 5) + 1;
+      if (guess === chosen) {
+        numberResult.textContent = `Doğru bildim oley bee aklından sen:${guess} tuttun. +20 puan!`;
+        totalScore += 20;
+      } else {
+        numberResult.textContent = `Hmm... Sanırım ${guess} tuttun di mi neyse yanıldım! +10 puan!`;
+        totalScore += 10;
+      }
+      numberGameStep++;
+      if (numberGameStep >= 3) {
+        setTimeout(() => {
+          numberGameArea.style.display = 'none';
+          gamePhase = 'memoryGame'; /* Doğrudan hafıza oyununa geçiş */
+          messageEl.textContent = "Sıra hafıza oyununda! Eşleşenleri bul!"; /* Yeni mesaj */
+          setupMemoryGame(); /* Hafıza oyunu kurulumu */
+          memoryGameArea.style.display = 'flex'; /* Hafıza oyunu alanını göster */
+        }, 2500);
+      }
+    }
+  });
+
+  // Kedi Besleme Oyunu ile ilgili JavaScript kodu kaldırıldı
+  // let foodInitialX, foodInitialY;
+  // foodEl.addEventListener('dragstart', ...);
+  // catEl.addEventListener('dragover', ...);
+  // catEl.addEventListener('drop', ...);
+
+
+  // Memory Game
+  const cardsArray = ['🌹', '🌼', '🐱', '🍓', '🌹', '🌼', '🐱', '🍓'];
+  let hasFlippedCard = false;
+  let lockBoard = false;
+  let firstCard, secondCard;
+  let matchesFound = 0;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function setupMemoryGame() {
+    shuffle(cardsArray);
+    memoryGameGrid.innerHTML = '';
+    cardsArray.forEach(item => {
+      const card = document.createElement('div');
+      card.classList.add('memory-card');
+      card.dataset.card = item;
+
+      const frontFace = document.createElement('div');
+      frontFace.classList.add('front-face');
+
+      const backFace = document.createElement('div');
+      backFace.classList.add('back-face');
+      backFace.textContent = item;
+
+      card.appendChild(frontFace);
+      card.appendChild(backFace);
+      card.addEventListener('click', flipCard);
+      memoryGameGrid.appendChild(card);
+    });
+    matchesFound = 0;
+    memoryGameMessage.textContent = '';
+  }
+
+  function flipCard() {
+    if (lockBoard) return;
+    if (this === firstCard) return;
+
+    this.classList.add('flip');
+
+    if (!hasFlippedCard) {
+      hasFlippedCard = true;
+      firstCard = this;
+      return;
+    }
+
+    secondCard = this;
+    checkForMatch();
+  }
+
+  function checkForMatch() {
+    let isMatch = firstCard.dataset.card === secondCard.dataset.card;
+    isMatch ? disableCards() : unflipCards();
+  }
+
+  function disableCards() {
+    firstCard.removeEventListener('click', flipCard);
+    secondCard.removeEventListener('click', flipCard);
+    resetBoard();
+    matchesFound++;
+    totalScore += 50; // Points for a match
+    memoryGameMessage.textContent = `Eşleşme buldun! (+50 puan) Toplam Puan: ${totalScore}`;
+
+    if (matchesFound === cardsArray.length / 2) {
+      setTimeout(() => {
+        memoryGameMessage.textContent = "Tebrikler! Tüm eşleşmeleri buldun!";
+        setTimeout(() => {
+          memoryGameArea.style.display = 'none';
+          gamePhase = 'secret';
+          secretArea.style.display = 'flex';
+          messageEl.textContent = "Ve işte sürpriz bölüme geldik";
+        }, 2000);
+      }, 1000);
+    }
+  }
+
+  function unflipCards() {
+    lockBoard = true;
+    setTimeout(() => {
+      firstCard.classList.remove('flip');
+      secondCard.classList.remove('flip');
+      resetBoard();
+    }, 1500);
+  }
+
+  function resetBoard() {
+    [hasFlippedCard, lockBoard] = [false, false];
+    [firstCard, secondCard] = [null, null];
+  }
+
+
+  // Gizli bölüm
+  secretBtn.addEventListener('click', () => {
+    secretMessage.textContent = `Seni gerçekten çok seviyorum Toplam puanın: ${totalScore} ❤️`;
+    secretBtn.disabled = true;
+
+    setTimeout(finalStage, 3500);
+  });
+
+  // Final aşaması
+  function finalStage() {
+    gamePhase = 'final';
+    secretArea.style.display = 'none';
+    messageEl.style.opacity = 0;
+    finalHeart.style.opacity = 1;
+    mainButtons.style.display = 'none';
+    heartEl.style.opacity = 0;
+    cow.style.animationPlayState = 'running';
+    dog.style.animationPlayState = 'running';
+    launchConfetti();
+  }
+
+  // Konfeti animasyonu (çok basit)
+  const confettiPieces = [];
+  const colors = ['#d6336c', '#ff356d', '#fceabb', '#fed6e3', '#b02a56'];
+
+  function launchConfetti() {
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+
+    for(let i=0; i<150; i++) {
+      confettiPieces.push({
+        x: Math.random()*confettiCanvas.width,
+        y: Math.random()*confettiCanvas.height - confettiCanvas.height,
+        r: Math.random()*6 + 4,
+        d: Math.random()*150 + 10,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        tilt: Math.floor(Math.random()*10) - 10,
+        tiltAngle: 0,
+        tiltAngleIncrement: (Math.random() * 0.07) + 0.05
+      });
+    }
+    drawConfetti();
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    confettiPieces.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.lineWidth = p.r / 2;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
+      ctx.stroke();
+
+      p.tiltAngle += p.tiltAngleIncrement;
+      p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+      p.tilt = Math.sin(p.tiltAngle) * 15;
+
+      if(p.y > confettiCanvas.height) {
+        p.x = Math.random() * confettiCanvas.width;
+        p.y = -10;
+      }
+    });
+    if(gamePhase === 'final') {
+      requestAnimationFrame(drawConfetti);
+    }
+  }
+
+  // Başlangıçta kaçan buton rastgele pozisyonda
+  moveLeaveButton();
+
+  // Mobil dokunma için kaçan buton
+  btnLeave.addEventListener('touchstart', () => {
+    if (Math.random() < 0.5) {
+      moveLeaveButton();
+      showWarning();
+
+    } else {
+      // If you want to keep a "rocketFly" effect for the leave button, re-implement it.
+      // For now, it just moves.
+      moveLeaveButton();
+    }
+  });
+
+</script>
+
+</body>
+</html>
